@@ -1,5 +1,5 @@
 import java.util.Scanner;
-import java.util.Arrays;
+import java.util.InputMismatchException;
 public class Helpers {
     
     // Partially AI-generated. Model: Gemini. Used to discover and use the Thread and its methods.
@@ -19,14 +19,14 @@ public class Helpers {
         System.out.println("");
     }
 
-    public static String checkAns(String[] cases) {
-        Scanner input = new Scanner(System.in);
+    public static int tryAns(Scanner input) {
         while (true) {
-            String ans = input.next();
-            if (Arrays.asList(cases).contains(ans)) {
+            try {
+                int ans = input.nextInt();
                 return ans;
-            } else {
-                System.out.println("Invalid input.");
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine();
             }
         }
     }

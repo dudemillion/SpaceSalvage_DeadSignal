@@ -63,7 +63,7 @@ public class Ship {
 
     public void setShield(int shield) {
         if (shield < 0) {
-            this.shield = 0;
+            System.out.println("Cannot set shield to negative charge.");
         } else if (shield > maxShield) {
             System.out.println("Cannot set shield battery above maximum charge.");
         } else {

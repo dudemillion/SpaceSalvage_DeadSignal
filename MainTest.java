@@ -1,3 +1,4 @@
+import java.util.Scanner;
 public class MainTest {
     public static void main(String[] args) {
         Ship ship = new Ship(100, 50, 100.0, 50, 100, 50, 100, new String[1]);
@@ -5,6 +6,6 @@ public class MainTest {
         + " Shields: " + ship.getShield() 
         + " Fuel: " + ship.getFuel()
         + " Credits: " + ship.getCredits());
-        Expedition.resolveHazard(ship);
+        Scanner input = new Scanner(System.in);
     }
 }
