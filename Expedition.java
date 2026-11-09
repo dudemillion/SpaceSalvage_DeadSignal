@@ -242,7 +242,7 @@ public class Expedition {
                         Helpers.typewrite("...", 150);
                         Helpers.typewrite("Closing hatch...", 70);
                         Helpers.typewrite("Shields malfunctioning.", 70);
-                        ship.setShield(ship.getShield() - 10);
+                        ship.setShield(Math.max(0, ship.getShield() - 10));
                     }
                     break;
                 } else {
