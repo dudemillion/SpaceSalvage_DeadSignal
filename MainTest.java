@@ -5,5 +5,6 @@ public class MainTest {
         + " Shields: " + ship.getShield() 
         + " Fuel: " + ship.getFuel()
         + " Credits: " + ship.getCredits());
+        Expedition.resolveHazard(ship);
     }
 }
