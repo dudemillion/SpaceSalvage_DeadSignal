@@ -19,11 +19,19 @@ public class DangerousExpedition extends Expedition {
     }
 
     public void setHazardLevel(int hazardLevel) {
-        this.hazardLevel = hazardLevel;
+        if (hazardLevel < 0) {
+            System.out.println("Hazard level cannot be negative.");
+        } else {
+            this.hazardLevel = hazardLevel;
+        }
     }
 
     public void setBonusDamage(int bonusDamage) {
-        this.bonusDamage = bonusDamage;
+        if (bonusDamage < 0) {
+            System.out.println("Bonus damage cannot be negative.");
+        } else {
+            this.bonusDamage = bonusDamage;
+        }
     }
 
     public static int calculateHazardDamage(int baseDamage, int hazardLevel, int bonusDamage) {
@@ -32,15 +40,17 @@ public class DangerousExpedition extends Expedition {
     }
 
     @Override 
-    public void resolveHazard(Ship ship, Scanner input) {
+    public int resolveHazard(Ship ship, Scanner input) {
         int random = ThreadLocalRandom.current().nextInt(0, 5);
         if (random == 0 || random == 1) {
-            super.resolveHazard(ship, input);
+            return super.resolveHazard(ship, input);
         } else if (random == 2 || random == 3) {
             electromagneticStorm(ship, input, this.hazardLevel, this.bonusDamage);
+            return 0;
         } else if (random == 4) {
-            unstableReactor(ship, input, this.hazardLevel, this.bonusDamage);
+            return unstableReactor(ship, input, this.hazardLevel, this.bonusDamage);
         }
+        return 0;
     }
 
     private static void electromagneticStorm(Ship ship, Scanner input, int hazardLevel, int bonusDamage) {
@@ -56,6 +66,7 @@ public class DangerousExpedition extends Expedition {
             int choice = Helpers.tryAns(input);
             if (choice == 1) {
                 if (ship.getFuel() < fuelLoss) {
+                    ship.takeDamage(calculateHazardDamage(damage, hazardLevel, bonusDamage));
                     Helpers.typewrite("H-Hyperdriiive unavaaili-b-ble.  Insu*kzrt*fficIent FUEl", 200);
                     Helpers.typewrite("Sys..tems shu-t-ting dooown...", 250);
                     Helpers.typewrite("...", 300);
@@ -68,7 +79,7 @@ public class DangerousExpedition extends Expedition {
                         Helpers.typewrite("*A chime plays as the system's computers come back to life.", 70);
                         Helpers.typewrite("Performing diagnostic...", 100);
                         Helpers.typewrite("...", 300);
-                        Helpers.typewrite("Warning! The ship has taken " + damage + " damage!", 70);
+                        Helpers.typewrite("Warning! The ship has taken " + calculateHazardDamage(damage, hazardLevel, bonusDamage) + " damage!", 70);
                         System.out.println("I know that much...");
                     } else {
                         Helpers.typewrite("..?", 250);
@@ -76,6 +87,7 @@ public class DangerousExpedition extends Expedition {
                     }
                     break;
                 }
+                ship.setFuel(ship.getFuel() - fuelLoss);
                 Helpers.typewrite("Eng..aging Hy-yper*kzzrt*drive", 200);
                 Helpers.typewrite("...", 300);
                 System.out.println("You feel yourself sink back into your seat as the hyperdrive engages successfully.");
@@ -83,7 +95,7 @@ public class DangerousExpedition extends Expedition {
                 Helpers.typewrite("Ship functions restored. Warp successful.", 70);
                 break;
             } else if (choice == 2) {
-                ship.takeDamage(damage);
+                ship.takeDamage(calculateHazardDamage(damage, hazardLevel, bonusDamage));
                 Helpers.typewrite("Sys..tems shu-t-ting dooown...", 250);
                 Helpers.typewrite("...", 300);
                 System.out.println("...okay. Gotta hope the ship can take this damage.");
@@ -95,7 +107,7 @@ public class DangerousExpedition extends Expedition {
                     Helpers.typewrite("*A chime plays as the system's computers come back to life.", 70);
                     Helpers.typewrite("Performing diagnostic...", 100);
                     Helpers.typewrite("...", 300);
-                    Helpers.typewrite("Warning! The ship has taken " + damage + " damage!", 70);
+                    Helpers.typewrite("Warning! The ship has taken " + calculateHazardDamage(damage, hazardLevel, bonusDamage) + " damage!", 70);
                     System.out.println("I know that much...");
                 } else {
                     Helpers.typewrite("..?", 250);
@@ -108,7 +120,7 @@ public class DangerousExpedition extends Expedition {
         }
     }
 
-    private static void unstableReactor(Ship ship, Scanner input, int hazardLevel, int bonusDamage) {
+    private static int unstableReactor(Ship ship, Scanner input, int hazardLevel, int bonusDamage) {
         Helpers.typewrite("Warning. Ship approaching dangerously critical vessel.", 70);
         Helpers.typewrite("Further analysis reveals that the reactor of the vessel has gone unstable.", 70);
         Helpers.typewrite("The ship cannot bear the damage of a reactor explosion. Immediate action required.", 70);
@@ -117,7 +129,7 @@ public class DangerousExpedition extends Expedition {
         int salvageDamage = 999;
         int damage = ThreadLocalRandom.current().nextInt(20, 25);
         System.out.println("[1] Retreat (-" + fuelLoss + " Fuel)");
-        System.out.println("[2] Attempt Salvage (40% chance of " + damage + " damage");
+        System.out.println("[2] Attempt Salvage (40% chance of success, 60% chance of ship destruction)");
         while (true) {
             int choice = Helpers.tryAns(input);
             if (choice == 1) {
@@ -140,20 +152,21 @@ public class DangerousExpedition extends Expedition {
                             Helpers.typewrite("*A chime plays as the system's computers come back to life.", 70);
                             Helpers.typewrite("Performing diagnostic...", 100);
                             Helpers.typewrite("...", 300);
-                            Helpers.typewrite("Warning! The ship has taken " + damage + " damage!", 70);
+                            Helpers.typewrite("Warning! The ship has taken " + calculateHazardDamage(damage, hazardLevel, bonusDamage) + " damage!", 70);
                             System.out.println("Oh well.");
                         } else {
                             Helpers.typewrite("..?", 250);
                             System.out.println("The systems remain powered off.. It seems it is using it's emergency reserve power to keep the ship from exploding.");
                         }
                     }
-                    break;
+                    return 0;
                 }
+                ship.setFuel(ship.getFuel() - fuelLoss);
                 Helpers.typewrite("Diverting course.", 70);
                 Helpers.typewrite("*You look off to your side as you pass the vessel. It looks fine to you, but you suppose that not all unstable reactors are that obvious.*", 65);
                 Helpers.typewrite("...", 300);
                 Helpers.typewrite("Reactor explosion danger radius escaped.", 70);
-                break;
+                return 0;
             } else if (choice == 2) {
                 System.out.println("Maybe I can take advantage of this. This would be good salvage.");
                 Helpers.typewrite("Warning! Approaching unstable vessel! Whatever you're doing is not worth it!", 70);
@@ -170,13 +183,16 @@ public class DangerousExpedition extends Expedition {
                     Helpers.typewrite("Successfully escaped radi", 65);
                     System.out.println("*BOOM*");
                     Helpers.typewrite("...us", 80);
+                    return 50;
                 } else {
                     System.out.println("*BOOM*");
                     ship.takeDamage(salvageDamage);
                     Helpers.typewrite("...", 600);
                     System.out.println("The unstable vessel exploded during salvage extraction. The ship is obliterated.");
+                    return 0;
                 }
-                break;
+            } else {
+                System.out.println("Input not recognized.");
             }
         }
     }

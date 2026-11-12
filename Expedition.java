@@ -46,7 +46,7 @@ public class Expedition {
         this.baseReward = baseReward;
     }
 
-    public void resolveHazard(Ship ship, Scanner input) {
+    public int resolveHazard(Ship ship, Scanner input) {
         int chance = (int)(Math.random() * 5);
         System.out.print("Ship: ");
         Helpers.typewrite("Searching for anomalies...", 100);
@@ -61,6 +61,7 @@ public class Expedition {
         } else {
             shieldMalfunction(ship, input);
         }
+        return 0;
     }
     private static void asteroidEncounter(Ship ship, Scanner input) {
         Helpers.typewrite("Danger! An asteroid is on a collision course with navigation!", 70);
