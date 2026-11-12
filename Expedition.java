@@ -179,8 +179,8 @@ public class Expedition {
                 Helpers.typewrite("Hyperdrive engaged. Launching...", 70);
                 Helpers.typewrite("Hey! You better not be using your hyperdrive!", 60);
                 Helpers.typewrite("Warning! Incoming enemy vessel fire!", 50);
-                int escape = ThreadLocalRandom.current().nextInt(1, 3);
-                if (escape == 1) {
+                boolean escape = ThreadLocalRandom.current().nextBoolean();
+                if (escape) {
                     Helpers.typewrite("*kzzzhrrrtt...* Warp successful.", 70);
                     break;
                 } else {
@@ -214,7 +214,7 @@ public class Expedition {
                     System.out.println("Surely I can fix up the generators from in here. Probably a software issue.");
                     Helpers.typewrite("...", 300);
                     System.out.println("Well, there is an error in the code here. Let's see if we can fix this...");
-                    if (ThreadLocalRandom.current().nextInt(1, 3) == 1) {
+                    if (ThreadLocalRandom.current().nextBoolean()) {
                         Helpers.typewrite("Shields functional.", 80);
                         System.out.println("Nice!");
                     } else {
