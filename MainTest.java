@@ -7,5 +7,8 @@ public class MainTest {
         + " Fuel: " + ship.getFuel()
         + " Credits: " + ship.getCredits());
         Scanner input = new Scanner(System.in);
+        FreqScanner scanna = new FreqScanner();
+
+        scanna.generateSignal(ship, input);
     }
 }
