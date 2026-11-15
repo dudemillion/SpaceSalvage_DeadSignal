@@ -52,18 +52,18 @@ public class Expedition {
         Helpers.typewrite("Searching for anomalies...", 100);
         if (chance >= 0 && chance < 1) {
             System.out.println("No anomalies found! Safe travels from here.");
+            return 0;
         } else if (chance >= 1 && chance < 2) {
-            asteroidEncounter(ship, input);
+            return asteroidEncounter(ship, input);
         } else if (chance >= 2 && chance < 3) {
-            radiationEncounter(ship, input);
+            return radiationEncounter(ship, input);
         } else if (chance >= 3 && chance < 4) {
-            pirateEncounter(ship, input);
+            return pirateEncounter(ship, input);
         } else {
-            shieldMalfunction(ship, input);
+            return shieldMalfunction(ship, input);
         }
-        return 0;
     }
-    private static void asteroidEncounter(Ship ship, Scanner input) {
+    private static int asteroidEncounter(Ship ship, Scanner input) {
         Helpers.typewrite("Danger! An asteroid is on a collision course with navigation!", 70);
         System.out.println("Choose what to do...");
         int fuelLoss = ThreadLocalRandom.current().nextInt(10, 16);
@@ -78,32 +78,32 @@ public class Expedition {
                     Helpers.typewrite("Warning! Insufficient fuel! Course diversion impossible.", 70);
                     Helpers.typewrite("Alert! Asteroid collision! The ship has taken " + damage + " damage.", 70);
                     ship.takeDamage(damage);
-                    break;
+                    return 0;
                 } else {
                     ship.setFuel(ship.getFuel() - fuelLoss);
                     Helpers.typewrite("Successfully diverted course. Thank you.", 70);
-                    break;
+                    return 0;
                 }   
             } else if (choice == 2) {
                 ship.takeDamage(damage);
                 Helpers.typewrite("Alert! Asteroid collision! The ship has taken " + damage + " damage.", 70);
-                break;
+                return 0;
             } else if (choice == 3) {
                 int pray = ThreadLocalRandom.current().nextInt(1, 101);
                 if (pray <= 5) {
                     Helpers.typewrite("Update: Asteroid has miraculously diverged its course from the ship. No further action is required.", 60);
-                    break;
+                    return 0;
                 } else {
                     ship.takeDamage(damage*2);
                     Helpers.typewrite("Alert! Asteroid collision! The ship has taken " + damage*2 + " damage.", 70);
-                    break;
+                    return 0;
                 }
             } else {
                 System.out.println("Input not recognized.");
             }
         }
     }
-    private static void radiationEncounter(Ship ship, Scanner input) {
+    private static int radiationEncounter(Ship ship, Scanner input) {
         Helpers.typewrite("Danger! Radiation storm detected ahead!", 70);
         System.out.println("Choose what to do...");
         int fuelLoss = ThreadLocalRandom.current().nextInt(10, 16);
@@ -118,24 +118,24 @@ public class Expedition {
                     Helpers.typewrite("Warning! Insufficient fuel! Course diversion impossible.", 70);
                     Helpers.typewrite("Alert! Radiation damage detected! The ship has taken " + damage + " damage.", 70);
                     ship.takeDamage(damage);
-                    break;
+                    return 0;
                 }
                 ship.setFuel(ship.getFuel() - fuelLoss);
                 Helpers.typewrite("Successfully avoided radiation storm. Thank you.", 70);
-                break;
+                return 0;
             } else if (choice == 2) {
                 ship.takeDamage(damage);
                 Helpers.typewrite("Alert! Radiation damage detected! The ship has taken " + damage + " damage.", 70);
-                break;
+                return 0;
             } else if (choice == 3) {
                 int pray = ThreadLocalRandom.current().nextInt(1, 101);
                 if (pray <= 5) {
                     Helpers.typewrite("Update: The radiation storm has dissipated unexpectedly. No further action is required.", 80);
-                    break;
+                    return 0;
                 } else {
                     ship.takeDamage(damage*2);
                     Helpers.typewrite("Alert! Radiation damage detected! The ship has taken " + damage*2 + " damage.", 70);
-                    break;
+                    return 0;
                 }
             } else {
                 System.out.println("Input not recognized.");
@@ -143,7 +143,7 @@ public class Expedition {
         }
     }
 
-    private static void pirateEncounter(Ship ship, Scanner input) {
+    private static int pirateEncounter(Ship ship, Scanner input) {
         int creditCost = ThreadLocalRandom.current().nextInt(15, 21);
         int damage = ThreadLocalRandom.current().nextInt(20, 31);
         Helpers.typewrite("Warning. Unknown vessels approaching ship.", 70);
@@ -161,12 +161,13 @@ public class Expedition {
                     Helpers.typewrite("What!? You don't have enough?", 60);
                     Helpers.typewrite("You know what? I'm feeling generous for the POOR today. I'll leave you be.", 60);
                     Helpers.typewrite("...Signal lost...", 70);
-                    break;
+                    return 0;
                 }
                 Helpers.typewrite("Success. " + creditCost + " credits transferred.", 70);
                 ship.setCredits(ship.getCredits()-creditCost);
+                
                 Helpers.typewrite("*khzzrt* Thank you.", 60);
-                break;
+                return 0;
             } else if (choice == 2) {
                 Helpers.typewrite("Ha! Then we will show no mercy.", 60);
                 Helpers.typewrite("Warning! Incoming enemy vessel fire! Ship navigation rerouted for escape.", 50);
@@ -175,7 +176,7 @@ public class Expedition {
                 Helpers.typewrite("Signal lost.", 70);
                 Helpers.typewrite("The ship has taken " + damage + " damage.", 70);
                 ship.takeDamage(damage);
-                break;
+                return 0;
             } else if (choice == 3) {
                 Helpers.typewrite("Hyperdrive engaged. Launching...", 70);
                 Helpers.typewrite("Hey! You better not be using your hyperdrive!", 60);
@@ -183,7 +184,7 @@ public class Expedition {
                 boolean escape = ThreadLocalRandom.current().nextBoolean();
                 if (escape) {
                     Helpers.typewrite("*kzzzhrrrtt...* Warp successful.", 70);
-                    break;
+                    return 0;
                 } else {
                     Helpers.typewrite("Hyperdrive damaged! Warp cancelled.", 50);
                     Helpers.typewrite("Fool!", 60);
@@ -193,7 +194,7 @@ public class Expedition {
                     Helpers.typewrite("Signal lost.", 70);
                     Helpers.typewrite("The ship has taken " + damage*2 + " damage.", 70);
                     ship.takeDamage(damage*2);
-                    break;
+                    return 0;
                 }
             } else {
                 System.out.println("Input not recognized.");
@@ -201,9 +202,10 @@ public class Expedition {
         }
     }
 
-    private static void shieldMalfunction(Ship ship, Scanner input) {
+    private static int shieldMalfunction(Ship ship, Scanner input) {
         if (ship.getShield() == 0) {
             System.out.println("No anomalies found! Safe travels from here.");
+            return 0;
         } else {
             Helpers.typewrite("Warning. External shields malfunctioning.", 70);
             System.out.println("Choose what to do...");
@@ -221,9 +223,11 @@ public class Expedition {
                     } else {
                         Helpers.typewrite("...Shields malfunctioning.", 80);
                         System.out.println("Shoot.");
-                        ship.setShield(Math.max(0, ship.getShield() - 10));
+                        int shieldDamage = Math.max(0, ship.getShield() - 10);
+                        ship.setShield(shieldDamage);
+                        return 0;
                     }
-                    break;
+                    return 0;
                 } else if (choice == 2) {
                     System.out.println("Attach that tether... Okay.");
                     Helpers.typewrite("Opening ship latch...", 70);
@@ -243,9 +247,11 @@ public class Expedition {
                         Helpers.typewrite("...", 150);
                         Helpers.typewrite("Closing hatch...", 70);
                         Helpers.typewrite("Shields malfunctioning.", 70);
-                        ship.setShield(Math.max(0, ship.getShield() - 10));
+                        int shieldDamage = Math.max(0, ship.getShield() - 10);
+                        ship.setShield(shieldDamage);
+                        return 0;
                     }
-                    break;
+                    return 0;
                 } else {
                     System.out.println("Input not recognized.");
                 }

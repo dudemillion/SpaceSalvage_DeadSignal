@@ -63,7 +63,7 @@ public class FreqScanner {
         }
     }
 
-    public double generateSignal(Ship ship, Scanner scanner) {
+    public int generateSignal(Ship ship, Scanner scanner) {
         this.matches = 0;
         for (int i = 0; i < this.targetFrequency.length; i++) {
             this.targetFrequency[i] = ThreadLocalRandom.current().nextInt(1, 6);
@@ -101,12 +101,15 @@ public class FreqScanner {
             case 5: Helpers.typewrite("Five matches made. The frequency holds perfectly!", 70); mult = 3.0; break;
             default: System.out.println("Error."); break;
         }
+
         if (mult > 1.0) {
+            Helpers.typewrite("You extract more valuable salvage by following the frequency, and store it in the ship.", 60);
             Helpers.typewrite("The company has approved a multiplication to your payout of " + mult + ".", 70);
         } else {
+            Helpers.typewrite("You struggle to find good salvage without a frequency to follow.", 60);
             Helpers.typewrite("The company is disappointed in your performance.", 70);
         }
-        return mult;
+        return matches;
     }
 
     public static String revealFrequencies(Ship ship, int[] revealedFrequencies, int[] frequencies) {
