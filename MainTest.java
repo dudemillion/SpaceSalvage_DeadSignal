@@ -8,7 +8,8 @@ public class MainTest {
         + " Credits: " + ship.getCredits());
         Scanner input = new Scanner(System.in);
         FreqScanner scanna = new FreqScanner();
-
-        scanna.generateSignal(ship, input);
+        UpgradeShop shop = new UpgradeShop();
+        shop.openShop(ship, input);
+        
     }
 }

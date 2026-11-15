@@ -114,7 +114,7 @@ public class FreqScanner {
         int revealed = 1;
         String message = "";
         for (int i = 0; i<ship.getUpgrades().length; i++) {
-            if ("Scanner".equals(ship.getUpgrades()[i])) {
+            if ("Advanced Scanner".equals(ship.getUpgrades()[i])) {
                 if (revealed >= 5) {
                     System.out.println("Error. Revealed frequencies exceeded 5.");
                     break;
