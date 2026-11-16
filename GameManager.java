@@ -4,6 +4,7 @@ public class GameManager {
     private Ship ship;
     private ArrayList<ExpeditionResult> expeditionHistory;
     private int totalSpent;
+    private int totalEarned;
     private int successfulExpeditions;
     private String saveName;
 
@@ -11,6 +12,7 @@ public class GameManager {
         ship = new Ship(100, 50, 100.0, 10, 100, 50, 100, new String[0]);
         expeditionHistory = new ArrayList<ExpeditionResult>();
         totalSpent = 0;
+        totalEarned = 0;
         successfulExpeditions = 0;
         saveName = "Placeholder";
     }
@@ -30,8 +32,21 @@ public class GameManager {
         while (true) {
             int ans = Helpers.tryAns(input);
             if (ans == 1) {
-                // SaveManager.loadGame(); // Dummy code until SaveManager is written, unknown if static or not
-                System.out.println("Not implemented.");
+                SaveManager saveManager = new SaveManager(saveName, ship, expeditionHistory);
+                saveManager.loadGame(input);
+                saveName = saveManager.getSave();
+                totalSpent = saveManager.getTotalSpent();
+                totalEarned = saveManager.getTotalEarned();
+                successfulExpeditions = saveManager.getTotalSuccessfulExpeds();
+                UpgradeShop shop = new UpgradeShop();
+                Expedition[] expeditions = new Expedition[5];
+                expeditions[0] = new Expedition(1, "Local Asteroid System", 0, 3);
+                expeditions[1] = new Expedition(5, "Asteroid Belt", 5, 10);
+                expeditions[2] = new Expedition(8, "Derelict Freighter", 8, 15);
+                expeditions[3] = new DangerousExpedition(10, "Ship Graveyard [DANGEROUS]", 15, 25, 1, 5);
+                expeditions[4] = new DangerousExpedition(15, "Alien Ruins [DANGEROUS]", 25, 40, 2, 7);
+
+                openMenu(input, expeditions, shop);
             } else if (ans == 0) {
                 System.out.println("Name your save.");
                 boolean sure = false;
@@ -64,6 +79,7 @@ public class GameManager {
     }
 
     public void openMenu(Scanner input, Expedition[] expeditions, UpgradeShop shop) {
+        SaveManager saveManager = new SaveManager(saveName, ship, expeditionHistory);
         while (true) {
             System.out.println("======= Menu =======");
             System.out.println();
@@ -83,7 +99,7 @@ public class GameManager {
                     System.out.println("[" + (i+1) + "] " + expeditions[i].getName() + " (Credit cost: " + expeditions[i].getCredCost() + " Fuel cost: " + expeditions[i].getFuelCost() + ")");
                 }
                 System.out.println();
-                System.out.println("[5] Return to menu");
+                System.out.println("[6] Return to menu");
                 while (true) {
                     int expAns = Helpers.tryAns(input);
                     if (expAns == 1 || expAns == 2 || expAns == 3 || expAns == 4 || expAns == 5) {
@@ -102,7 +118,15 @@ public class GameManager {
             } else if (ans == 4) {
                 showStats(input);
             } else if (ans == 5) {
-                // save logic when SaveManager is implemented. Same as the answer 6 save logic.
+                totalEarned = 0;
+                for (int i = 0; i < expeditionHistory.size(); i++) {
+                    totalEarned += expeditionHistory.get(i).getReward();
+                }
+                if (saveManager.saveGame(totalSpent, totalEarned, successfulExpeditions)) {
+                    System.out.println("Successfully saved game.");
+                } else {
+                    System.out.println("File failed to save.");
+                }
             } else if (ans == 6) {
                 help(input);
             } else if (ans == 7) {
@@ -110,7 +134,15 @@ public class GameManager {
                 while (true) {
                     int saveAns = Helpers.tryAns(input);
                     if (saveAns == 1) {
-                        // write this save code when SaveManager is made
+                        totalEarned = 0;
+                        for (int i = 0; i < expeditionHistory.size(); i++) {
+                            totalEarned += expeditionHistory.get(i).getReward();
+                        }
+                        if (saveManager.saveGame(totalSpent, totalEarned, successfulExpeditions)) {
+                            System.out.println("Successfully saved game.");
+                        } else {
+                            System.out.println("File failed to save.");
+                        }
                         System.out.println("Thank you for playing Space Salvage: Dead Signal.");
                         System.exit(0);
                     } else if (saveAns == 0) {
@@ -239,7 +271,7 @@ public class GameManager {
         System.out.println("You have had " + successfulExpeditions + " successful expeditions.");
         System.out.println("You've went on a total of " + expeditionHistory.size() + " expeditions.");
         System.out.println("You've had a net profit of " + (totalCredits-totalSpent) + " credits.");
-        double successRate = (double)(successfulExpeditions) / (double)(expeditionHistory.size());
+        double successRate = ((double)(successfulExpeditions) / (double)(expeditionHistory.size())) * 100.0;
         if (Double.isNaN(successRate)) {
             successRate = 0.0;
         }
