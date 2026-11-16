@@ -1,3 +1,10 @@
+/*
+I have only used resources indicated that are allowable.
+The work submitted is my, and only my work.
+Signature: Nikhil Bhalla
+Date: 11/15/2026
+*/
+
 import java.util.Scanner;
 import java.util.InputMismatchException;
 /**
@@ -5,6 +12,12 @@ import java.util.InputMismatchException;
  */
 public class Helpers {
     
+    /**
+     * Dummy default constructor. To appease JavaDocs.
+     */
+    private Helpers() {
+
+    }
     // Partially AI-generated. Model: Gemini. Used to discover and use the Thread and its methods.
     // I wanted to make the Java program wait to write each character.
     // I wrote everything other than the Thread sleep and interruption logic.

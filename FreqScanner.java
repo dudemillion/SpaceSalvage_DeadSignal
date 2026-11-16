@@ -1,3 +1,10 @@
+/*
+I have only used resources indicated that are allowable.
+The work submitted is my, and only my work.
+Signature: Nikhil Bhalla
+Date: 11/15/2026
+*/
+
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Scanner;
 import java.util.Arrays;

@@ -1,3 +1,11 @@
+/*
+I have only used resources indicated that are allowable.
+The work submitted is my, and only my work.
+Signature: Nikhil Bhalla
+Date: 11/15/2026
+*/
+
+
 /**
  * Generates results for expeditions for statistic tracking.
  */
