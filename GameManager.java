@@ -49,11 +49,13 @@ public class GameManager {
                     }
                 } while(!sure);
                 UpgradeShop shop = new UpgradeShop();
-                Expedition[] expeditions = new Expedition[4];
-                expeditions[0] = new Expedition(5, "Asteroid Belt", 5, 10);
-                expeditions[1] = new Expedition(8, "Derelict Freighter", 8, 15);
-                expeditions[2] = new DangerousExpedition(10, "Ship Graveyard [DANGEROUS]", 15, 25, 1, 5);
-                expeditions[3] = new DangerousExpedition(15, "Alien Ruins [DANGEROUS]", 25, 40, 2, 7);
+                Expedition[] expeditions = new Expedition[5];
+                expeditions[0] = new Expedition(1, "Local Asteroid System", 0, 3);
+                expeditions[1] = new Expedition(5, "Asteroid Belt", 5, 10);
+                expeditions[2] = new Expedition(8, "Derelict Freighter", 8, 15);
+                expeditions[3] = new DangerousExpedition(10, "Ship Graveyard [DANGEROUS]", 15, 25, 1, 5);
+                expeditions[4] = new DangerousExpedition(15, "Alien Ruins [DANGEROUS]", 25, 40, 2, 7);
+
                 openMenu(input, expeditions, shop);
             } else {
                 System.out.println("Unrecognized input.");
@@ -84,10 +86,10 @@ public class GameManager {
                 System.out.println("[5] Return to menu");
                 while (true) {
                     int expAns = Helpers.tryAns(input);
-                    if (expAns == 1 || expAns == 2 || expAns == 3 || expAns == 4) {
+                    if (expAns == 1 || expAns == 2 || expAns == 3 || expAns == 4 || expAns == 5) {
                         startExpedition(expeditions[expAns-1], input);
                         break;
-                    } else if (expAns == 5) {
+                    } else if (expAns == 6) {
                         break;
                     } else {
                         System.out.println("Unrecognized number.");
@@ -238,7 +240,10 @@ public class GameManager {
         System.out.println("You've went on a total of " + expeditionHistory.size() + " expeditions.");
         System.out.println("You've had a net profit of " + (totalCredits-totalSpent) + " credits.");
         double successRate = (double)(successfulExpeditions) / (double)(expeditionHistory.size());
-        System.out.println("Your expedition success rate is" + successRate + "%.");
+        if (Double.isNaN(successRate)) {
+            successRate = 0.0;
+        }
+        System.out.println("Your expedition success rate is " + successRate + "%.");
     }
 
     public void rescueShip(Expedition expedition, int salvage, int matches, int damageTaken) {

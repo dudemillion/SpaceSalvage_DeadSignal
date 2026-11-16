@@ -19,7 +19,11 @@ public class Expedition {
     }
 
     public void setFuelCost(double fuelCost) {
+        if (fuelCost < 0) {
+            System.out.println("Cannot set expedition fuel cost to negative.");
+        } else {
         this.fuelCost = fuelCost;
+        }
     }
 
     public String getName() {
@@ -27,7 +31,11 @@ public class Expedition {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name.isBlank()) {
+            System.out.println("Cannot set name to blank.");
+        } else {
+            this.name = name;
+        }
     }
 
     public int getCredCost() {
@@ -35,7 +43,11 @@ public class Expedition {
     }
 
     public void setCredCost(int credCost) {
-        this.credCost = credCost;
+        if (credCost < 0) {
+            System.out.println("Cannot set expedition credit cost below 0.");
+        } else {
+            this.credCost = credCost;
+        }
     }
 
     public int getBaseReward() {
@@ -43,7 +55,11 @@ public class Expedition {
     }
 
     public void setBaseReward(int baseReward) {
-        this.baseReward = baseReward;
+        if (baseReward < 0) {
+            System.out.println("Cannot set base reward below 0.");
+        } else {
+            this.baseReward = baseReward;
+        }
     }
 
     public int resolveHazard(Ship ship, Scanner input) {

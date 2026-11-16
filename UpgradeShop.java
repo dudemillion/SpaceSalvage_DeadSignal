@@ -33,7 +33,11 @@ public class UpgradeShop {
     }
 
     public void setItems(String[] items) {
-        this.items = items;
+        if (!(items.length == 6)) {
+            System.out.println("6 prices requried for upgrade shop.");
+        } else {
+            this.items = items;
+        }
     }
 
     public int openShop(Ship ship, Scanner input) {
