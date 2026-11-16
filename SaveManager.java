@@ -2,7 +2,9 @@ import java.io.*;
 import java.util.Properties;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * Runs the functions of saving and loading the game.
+ */
 public class SaveManager {
     private String saveName;
     private Ship ship;
@@ -11,6 +13,12 @@ public class SaveManager {
     private int loadedEarned;
     private int loadedSuccessfulExpeds;
 
+    /**
+     * Creates a new save manager. Also stores the player's total spent credits, earned credits, and successful expeditions.
+     * @param saveName The name of the save.
+     * @param ship The player's ship.
+     * @param expeditions The expeditions the player went on.
+     */
     public SaveManager(String saveName, Ship ship, ArrayList<ExpeditionResult> expeditions) {
         this.saveName = saveName;
         this.ship = ship;
@@ -20,10 +28,18 @@ public class SaveManager {
         this.loadedSuccessfulExpeds = 0;
     }
 
+    /**
+     * Gets the save's name.
+     * @return The name of the save.
+     */
     public String getSave() {
         return saveName;
     }
 
+    /**
+     * Sets the name of the save.
+     * @param saveName The new name.
+     */
     public void setSave(String saveName) {
         if (saveName != null && !saveName.trim().isEmpty()) {
             this.saveName = saveName;
@@ -32,22 +48,42 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Gets the player's ship.
+     * @return The player's ship.
+     */
     public Ship getShip() {
         return ship;
     }
 
+    /**
+     * Gets the expeditions the player went on.
+     * @return All the expeditions the player went on.
+     */
     public ArrayList<ExpeditionResult> getExpeds() {
         return expeditions;
     }
 
+    /**
+     * Sets the expeditions the player went on.
+     * @param expeditions The new list of expeditions. 
+     */
     public void setExpeds(ArrayList<ExpeditionResult> expeditions) {
         this.expeditions = expeditions;
     }
 
+    /**
+     * Gets the total credits spent.
+     * @return The total credits spent.
+     */
     public int getTotalSpent() {
         return loadedSpent;
     }
 
+    /**
+     * Sets the total credits spent.
+     * @param totalSpent The new total.
+     */
     public void setTotalSpent(int totalSpent) {
         if (totalSpent < 0) {
             System.out.println("Total spent cannot be negative.");
@@ -56,11 +92,19 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Gets the total credits earned.
+     * @return The total credits earned.
+     */
     public int getTotalEarned() {
         return loadedEarned;
     }
 
-    public void setTotalEarns(int totalEarned) {
+    /**
+     * Sets the total credits earned.
+     * @param totalEarned The new total.
+     */
+    public void setTotalEarned(int totalEarned) {
         if (totalEarned < 0) {
             System.out.println("Total earned cannot be negative.");
         } else {
@@ -68,10 +112,18 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Gets the total successful expeditions the player went on.
+     * @return The total successful expeditions.
+     */
     public int getTotalSuccessfulExpeds() {
         return loadedSuccessfulExpeds;
     }
 
+    /**
+     * Sets the total successful expeditions the player went on.
+     * @param successfulExpeditions The new total.
+     */
     public void setTotalSuccessfulExpeds(int successfulExpeditions) {
         if (successfulExpeditions < 0) {
             System.out.println("Total expeditions cannot be negative.");
@@ -81,6 +133,13 @@ public class SaveManager {
     }
 
     // Partially AI-generated. Model: ChatGPT. This code essentially allows me to make a list of keys equal to values, like a JSON. Then I write it to a file.
+    /**
+     * Saves the game. Uses Properties to easily write save data to a file.
+     * @param totalSpent The total credits spent
+     * @param totalEarned The total credits earned
+     * @param successfulExpeditions The total amount of successful expeditions.
+     * @return Whether the save was successful.
+     */
     public boolean saveGame(int totalSpent, int totalEarned, int successfulExpeditions) {
         Properties data = new Properties();
         data.setProperty("ship.hull", String.valueOf(ship.getHull()));
@@ -120,10 +179,14 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Loads the game. Ensures the file exists before attempting load.
+     * @param input The player's input.
+     */
     public void loadGame(Scanner input) {
+        input.nextLine();
         while (true) {
             System.out.println("What is the name of your file? (CASE-SENSITIVE)");
-            input.nextLine();
             String name = input.nextLine().trim();
             Properties data = new Properties();
             try (InputStream in = new FileInputStream("saves/" + name + ".properties")) {
@@ -155,6 +218,38 @@ public class SaveManager {
             } catch (NumberFormatException e) {
                 System.out.println("Number format exception: " + e.getMessage());
             }
+        }
+    }
+
+    // Partially AI-generated. Model: ChatGPT. This method uses the PrintWriter to write lines to the saves/(insertname)_stats.txt file.
+    /**
+     * Exports all statistics.
+     * @param successfulExpeditions The total successful expeditions.
+     * @param totalEarned The total amount of credits earned.
+     * @param totalSpent The total amount of credits spent.
+     * @param matches The total amount of matches made.
+     * @param damageTaken The total amount of damage taken.
+     */
+    public void exportStatistics(int successfulExpeditions, int totalEarned, int totalSpent, int matches, int damageTaken) {
+        File stats = new File("saves", saveName + "_stats.txt");
+        try (PrintWriter writer = new PrintWriter(new FileWriter(stats))) {
+            writer.println("===== SPACE SALVAGE: DEAD SIGNAL =====");
+            writer.println("Save: " + saveName);
+            writer.println();
+            writer.println("Total expeditions: " + expeditions.size());
+            writer.println("Successful expeditions: " + successfulExpeditions);
+            writer.println();
+            writer.println("Total credits earned: " + totalEarned);
+            writer.println("Total credits spent: " + totalSpent);
+            writer.println("Net credit profit/loss: " + (totalEarned - totalSpent));
+            writer.println();
+            writer.println("Total Frequency Matches: " + matches);
+            writer.println("Total damage taken: " + damageTaken);
+            double winRate = expeditions.isEmpty() ? 0.0 : (successfulExpeditions * 100.0 / expeditions.size());
+            writer.printf("Success rate: %.1f%%%n", winRate);
+            System.out.println("Successfully generated statistics.");
+        } catch (IOException e) {
+            System.out.println("Failed to export statistics: " + e.getMessage());
         }
     }
 }

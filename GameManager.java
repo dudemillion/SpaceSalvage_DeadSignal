@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+/**
+ * The master manager of the game. Runs the game and other important internal functions.
+ */
 public class GameManager {
     private Ship ship;
     private ArrayList<ExpeditionResult> expeditionHistory;
@@ -8,6 +11,9 @@ public class GameManager {
     private int successfulExpeditions;
     private String saveName;
 
+    /**
+     * Creates a new game manager. Creates vital variables to keep track of throughout the session.
+     */
     public GameManager() {
         ship = new Ship(100, 50, 100.0, 10, 100, 50, 100, new String[0]);
         expeditionHistory = new ArrayList<ExpeditionResult>();
@@ -17,14 +23,25 @@ public class GameManager {
         saveName = "Placeholder";
     }
 
+    /**
+     * Gets the name of the save.
+     * @return The save's name.
+     */
     public String getSaveName() {
         return saveName;
     }
 
+    /**
+     * Sets the name of the save.
+     * @param saveName The new name.
+     */
     public void setSaveName(String saveName) {
         this.saveName = saveName;
     }
 
+    /**
+     * Starts the game. Allows the player to load a save file, then creates more vital objects to be used later.
+     */
     public void startGame() {
         Scanner input = new Scanner(System.in);
         Helpers.typewrite("Welcome to Space Salvage: Dead Signal.", 80);
@@ -65,7 +82,7 @@ public class GameManager {
                 } while(!sure);
                 UpgradeShop shop = new UpgradeShop();
                 Expedition[] expeditions = new Expedition[5];
-                expeditions[0] = new Expedition(1, "Local Asteroid System", 0, 3);
+                expeditions[0] = new Expedition(0, "Local Asteroid System", 0, 3);
                 expeditions[1] = new Expedition(5, "Asteroid Belt", 5, 10);
                 expeditions[2] = new Expedition(8, "Derelict Freighter", 8, 15);
                 expeditions[3] = new DangerousExpedition(10, "Ship Graveyard [DANGEROUS]", 15, 25, 1, 5);
@@ -78,6 +95,12 @@ public class GameManager {
         }
     }
 
+    /**
+     * The main menu of the game. Allows player to deduce their next steps.
+     * @param input The player's input.
+     * @param expeditions The expeditions available.
+     * @param shop The upgrade shop.
+     */
     public void openMenu(Scanner input, Expedition[] expeditions, UpgradeShop shop) {
         SaveManager saveManager = new SaveManager(saveName, ship, expeditionHistory);
         while (true) {
@@ -119,10 +142,15 @@ public class GameManager {
                 showStats(input);
             } else if (ans == 5) {
                 totalEarned = 0;
+                int matches = 0;
+                int damageTaken = 0;
                 for (int i = 0; i < expeditionHistory.size(); i++) {
                     totalEarned += expeditionHistory.get(i).getReward();
+                    matches += expeditionHistory.get(i).getMatches();
+                    damageTaken += expeditionHistory.get(i).getDamageTaken();
                 }
                 if (saveManager.saveGame(totalSpent, totalEarned, successfulExpeditions)) {
+                    saveManager.exportStatistics(successfulExpeditions, totalEarned, totalSpent, matches, damageTaken);
                     System.out.println("Successfully saved game.");
                 } else {
                     System.out.println("File failed to save.");
@@ -135,10 +163,15 @@ public class GameManager {
                     int saveAns = Helpers.tryAns(input);
                     if (saveAns == 1) {
                         totalEarned = 0;
+                        int matches = 0;
+                        int damageTaken = 0;
                         for (int i = 0; i < expeditionHistory.size(); i++) {
                             totalEarned += expeditionHistory.get(i).getReward();
+                            matches += expeditionHistory.get(i).getMatches();
+                            damageTaken += expeditionHistory.get(i).getDamageTaken();
                         }
                         if (saveManager.saveGame(totalSpent, totalEarned, successfulExpeditions)) {
+                            saveManager.exportStatistics(successfulExpeditions, totalEarned, totalSpent, matches, damageTaken);
                             System.out.println("Successfully saved game.");
                         } else {
                             System.out.println("File failed to save.");
@@ -156,6 +189,12 @@ public class GameManager {
         }
     }
 
+    /**
+     * Starts an expedition. Runs checks on the player's fuel and credits to ensure they have enough, then evaluates the player's
+     * performance through the scanner minigame and handling hazards.
+     * @param expedition The expedition to start.
+     * @param input The player's input.
+     */
     public void startExpedition(Expedition expedition, Scanner input) {
         if (ship.getCredits() < expedition.getCredCost()) {
             System.out.println("Insufficient credits to go on expedition.");
@@ -235,6 +274,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Shows the statistics of the ship.
+     * @param input The player's input.
+     */
     public void showShipStats(Scanner input) {
         System.out.println("======= Ship Status =======");
         System.out.println("Hull: " + ship.getHull() + "/" + ship.getMaxHull());
@@ -250,6 +293,10 @@ public class GameManager {
         input.next();
     }
 
+    /**
+     * Shows the overall statistics of the current session.
+     * @param input The player's input.
+     */
     public void showStats(Scanner input) {
         int totalDamage = 0;
         int totalMatches = 0;
@@ -278,6 +325,14 @@ public class GameManager {
         System.out.println("Your expedition success rate is " + successRate + "%.");
     }
 
+    /**
+     * The emergency rescue protocol. If the player's hull hits zero, they must be saved.
+     * If they do not possess 25 credits to pay for the rescue, game over. Records a new expedition result.
+     * @param expedition The current expedition.
+     * @param salvage The salvage gained during the expedition.
+     * @param matches The matches made during the expedition.
+     * @param damageTaken The damage taken during the expedition.
+     */
     public void rescueShip(Expedition expedition, int salvage, int matches, int damageTaken) {
         Helpers.typewrite("...", 300);
         Helpers.typewrite("'EMERGENCY RESCUE INITIATED. DEDUCTING CREDITS...'", 60);
@@ -308,6 +363,13 @@ public class GameManager {
         }
     }
 
+    /**
+     * Successful extraction from an expedition. Records a new expedition result.
+     * @param expedition The expedition.
+     * @param salvage The salvage gained during the expedition.
+     * @param matches The matches made during the expedition.
+     * @param damageTaken Total damage taken during the expedition.
+     */
     public void extract(Expedition expedition, int salvage, int matches, int damageTaken) {
         successfulExpeditions++;
         Helpers.typewrite("You turn the ship back towards the station, and start returning, satisfied with your expedition.", 70);
@@ -325,6 +387,10 @@ public class GameManager {
         Helpers.typewrite("They're always so inhuman.", 70);
     }
 
+    /**
+     * The help menu. Explains the game to the player.
+     * @param input The player's input.
+     */
     public void help(Scanner input) {
         System.out.println("======= INFORMATION =======");
         System.out.println();

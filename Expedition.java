@@ -1,12 +1,23 @@
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Scanner;
 
+/**
+ * The expeditions of the game.
+ * Where most events happen.
+ */
 public class Expedition {
     private double fuelCost;
     private String name;
     private int credCost;
     private int baseReward;
 
+    /**
+     * Creates a new expedition.
+     * @param fuelCost The fuel cost of the expedition.
+     * @param name The name of the expedition.
+     * @param credCost The credit cost of the expedition.
+     * @param baseReward The base reward of the expedition.
+     */
     public Expedition(double fuelCost, String name, int credCost, int baseReward) {
         this.fuelCost = fuelCost;
         this.name = name;
@@ -14,10 +25,18 @@ public class Expedition {
         this.baseReward = baseReward;
     }
 
+    /**
+     * Gets the cost in fuel of the expedition.
+     * @return The expedition's fuel cost.
+     */
     public double getFuelCost() {
         return this.fuelCost;
     }
 
+    /**
+     * Sets the fuel cost of an expedition.
+     * @param fuelCost The new fuel cost.
+     */
     public void setFuelCost(double fuelCost) {
         if (fuelCost < 0) {
             System.out.println("Cannot set expedition fuel cost to negative.");
@@ -26,10 +45,18 @@ public class Expedition {
         }
     }
 
+    /**
+     * Gets the name of the expedition.
+     * @return The name of the expedition.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Sets the name of the expedition.
+     * @param name The new name for the expedition.
+     */
     public void setName(String name) {
         if (name.isBlank()) {
             System.out.println("Cannot set name to blank.");
@@ -38,10 +65,18 @@ public class Expedition {
         }
     }
 
+    /**
+     * Gets the credit cost of the expedition.
+     * @return The expedition's credit cost.
+     */
     public int getCredCost() {
         return this.credCost;
     }
 
+    /**
+     * Sets the credit cost of the expedition
+     * @param credCost The new credit cost.
+     */
     public void setCredCost(int credCost) {
         if (credCost < 0) {
             System.out.println("Cannot set expedition credit cost below 0.");
@@ -50,10 +85,18 @@ public class Expedition {
         }
     }
 
+    /**
+     * Gets the base reward of the expedition.
+     * @return The expedition's base reward.
+     */
     public int getBaseReward() {
         return this.baseReward;
     }
 
+    /**
+     * Sets the base reward of the expedition.
+     * @param baseReward The new base reward.
+     */
     public void setBaseReward(int baseReward) {
         if (baseReward < 0) {
             System.out.println("Cannot set base reward below 0.");
@@ -62,6 +105,12 @@ public class Expedition {
         }
     }
 
+    /**
+     * Starts a hazard encounter, either an asteroid, radiation, pirate, or shield malfunction encounter.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return Any bonus salvage earned.
+     */
     public int resolveHazard(Ship ship, Scanner input) {
         int chance = (int)(Math.random() * 5);
         System.out.print("Ship: ");
@@ -79,6 +128,13 @@ public class Expedition {
             return shieldMalfunction(ship, input);
         }
     }
+
+    /**
+     * The asteroid encounter, player can choose to divert navigation, brace the ship, or pray.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return Any bonus salvage.
+     */
     private static int asteroidEncounter(Ship ship, Scanner input) {
         Helpers.typewrite("Danger! An asteroid is on a collision course with navigation!", 70);
         System.out.println("Choose what to do...");
@@ -119,6 +175,13 @@ public class Expedition {
             }
         }
     }
+
+    /**
+     * The radiation encounter. The player can divert course, brace the ship, or pray.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return Any bonus salvage.
+     */
     private static int radiationEncounter(Ship ship, Scanner input) {
         Helpers.typewrite("Danger! Radiation storm detected ahead!", 70);
         System.out.println("Choose what to do...");
@@ -159,6 +222,12 @@ public class Expedition {
         }
     }
 
+    /**
+     * The pirate encounter. The player can pay the credit due, refuse, or run.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return Any bonus salvage.
+     */
     private static int pirateEncounter(Ship ship, Scanner input) {
         int creditCost = ThreadLocalRandom.current().nextInt(15, 21);
         int damage = ThreadLocalRandom.current().nextInt(20, 31);
@@ -218,6 +287,12 @@ public class Expedition {
         }
     }
 
+    /**
+     * The shield malfunction encounter. Players can either fix it from the inside or outside.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return Any bonus salvage.
+     */
     private static int shieldMalfunction(Ship ship, Scanner input) {
         if (ship.getShield() == 0) {
             System.out.println("No anomalies found! Safe travels from here.");

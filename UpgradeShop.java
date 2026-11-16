@@ -1,17 +1,31 @@
 import java.util.Scanner;
+/**
+ * The shop where the player performs maintenance and buys permanent upgrades.
+ */
 public class UpgradeShop {
     private int[] prices;
     private String[] items;
 
+    /**
+     * Creates a new upgrade shop. Predefined prices and items to purchase.
+     */
     public UpgradeShop() {
         prices = new int[]{50, 45, 30, 15, 15, 10};
         items = new String[]{"Advanced Scanner", "Reinforced Shields", "Expanded Fuel Tank", "Repair Ship", "Recharge Shields", "Refuel"};
     }
 
+    /**
+     * Gets the prices of the products in the shop.
+     * @return The prices of the products.
+     */
     public int[] getPrices() {
         return this.prices;
     }
 
+    /**
+     * Sets the prices of the products in the shop. Validates values.
+     * @param prices The new prices.
+     */
     public void setPrices(int[] prices) {
         boolean wasNeg = false;
         for (int i = 0; i < prices.length; i++) {
@@ -28,10 +42,18 @@ public class UpgradeShop {
         }
     }
 
+    /**
+     * Gets the items in the shop.
+     * @return The items in the shop.
+     */
     public String[] getItems() {
         return items;
     }
 
+    /**
+     * Sets the items in the shop. Validates values.
+     * @param items The new items.
+     */
     public void setItems(String[] items) {
         if (!(items.length == 6)) {
             System.out.println("6 prices requried for upgrade shop.");
@@ -40,6 +62,12 @@ public class UpgradeShop {
         }
     }
 
+    /**
+     * Opens the shop. Provides all the options to the player and does the respective actions.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @return The total credits spent during the shop visit.
+     */
     public int openShop(Ship ship, Scanner input) {
         int totalSpent = 0;
         int ans = 999;
@@ -73,7 +101,13 @@ public class UpgradeShop {
         return totalSpent;
     }
 
-
+    /**
+     * Allows the player to purchase an item from the shop.
+     * @param ship The player's ship.
+     * @param choice The player's choice.
+     * @param input The player's input.
+     * @return The amount spent.
+     */
     public int purchase(Ship ship, int choice, Scanner input) {
         System.out.println("You chose to purchase " + items[choice-1] + " for " + prices[choice-1] + " credits. Confirm? (1(Yes)/0(No))");
         int ans = Helpers.tryAns(input);

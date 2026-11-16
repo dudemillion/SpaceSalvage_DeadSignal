@@ -1,23 +1,49 @@
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
+/**
+ * Dangerous expeditions, higher damage, but higher rewards.
+ * Gives a hazard level and bonus damage to apply.
+ * 
+ */
 public class DangerousExpedition extends Expedition {
     private int hazardLevel;
     private int bonusDamage;
 
+    /**
+     * Creates a new dangerous expedition, only needing hazard level and bonus damage more than a regular expedition.
+     * @param fuelCost The fuel required to go on the expedition.
+     * @param name The name of the expedition.
+     * @param credCost The cost in credits of the expedition.
+     * @param baseReward The base credit reward of the expedition.
+     * @param hazardLevel The hazard level, which is used to help calculate damage.
+     * @param bonusDamage The bonus damage on top of base damage, also used in damage calculations.
+     */
     public DangerousExpedition(double fuelCost, String name, int credCost, int baseReward, int hazardLevel, int bonusDamage) {
         super(fuelCost, name, credCost, baseReward);
         this.hazardLevel = hazardLevel;
         this.bonusDamage = bonusDamage;
     }
 
+    /**
+     * Gets the hazard level of the expedition.
+     * @return The hazard level.
+     */
     public int getHazardLevel() {
         return this.hazardLevel;
     }
 
+    /**
+     * Gets the bonus damage of the expedition.
+     * @return The bonus damage.
+     */
     public int getBonusDamage() {
         return this.bonusDamage;
     }
 
+    /**
+     * Sets the hazard level of the expedition.
+     * @param hazardLevel The new hazard level.
+     */
     public void setHazardLevel(int hazardLevel) {
         if (hazardLevel < 0) {
             System.out.println("Hazard level cannot be negative.");
@@ -26,6 +52,10 @@ public class DangerousExpedition extends Expedition {
         }
     }
 
+    /**
+     * Sets the bonus damage of the expedition.
+     * @param bonusDamage The new bonus damage.
+     */
     public void setBonusDamage(int bonusDamage) {
         if (bonusDamage < 0) {
             System.out.println("Bonus damage cannot be negative.");
@@ -34,11 +64,28 @@ public class DangerousExpedition extends Expedition {
         }
     }
 
+    /**
+     * Calculates the damage taken from hazards using hazardLevel and bonusDamage.
+     * @param baseDamage The base damage to multiply.
+     * @param hazardLevel The hazard level of the expedition.
+     * @param bonusDamage The bonus damage of the expedition.
+     * @return The calculated total damage to inflict.
+     */
     public static int calculateHazardDamage(int baseDamage, int hazardLevel, int bonusDamage) {
         int damage = baseDamage + (hazardLevel * bonusDamage);
         return damage;
     }
 
+    /**
+     * Resolves a random hazard during a dangerous expedition.
+     * May trigger standard hazards, electromagnetic storms,
+     * or unstable reactor encounters.
+     *
+     * @param ship The player's ship affected by the hazard.
+     * @param input Scanner used to receive player decisions.
+     * @return The bonus salvage earned from the encounter, if any.
+     * @see Expedition#resolveHazard(Ship, java.util.Scanner)
+     */                    
     @Override 
     public int resolveHazard(Ship ship, Scanner input) {
         int random = ThreadLocalRandom.current().nextInt(0, 5);
@@ -53,6 +100,13 @@ public class DangerousExpedition extends Expedition {
         return 0;
     }
 
+    /**
+     * Triggers the electromagnetic storm encounter.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @param hazardLevel The expedition's hazard level.
+     * @param bonusDamage The expedition's bonus damage.
+     */
     private static void electromagneticStorm(Ship ship, Scanner input, int hazardLevel, int bonusDamage) {
         Helpers.typewrite("Warning. Electromagnetic storm detected ahead.", 70);
         Helpers.typewrite("Systems malfunctioning. Immediate action req", 70);
@@ -120,6 +174,14 @@ public class DangerousExpedition extends Expedition {
         }
     }
 
+    /**
+     * Triggers the unstable reactor hazard.
+     * @param ship The player's ship.
+     * @param input The player's input.
+     * @param hazardLevel The expedition's hazard level.
+     * @param bonusDamage The expedition's bonus damage.
+     * @return Bonus salvage earned from event.
+     */
     private static int unstableReactor(Ship ship, Scanner input, int hazardLevel, int bonusDamage) {
         Helpers.typewrite("Warning. Ship approaching dangerously critical vessel.", 70);
         Helpers.typewrite("Further analysis reveals that the reactor of the vessel has gone unstable.", 70);

@@ -1,12 +1,18 @@
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Scanner;
 import java.util.Arrays;
+/**
+ * The frequency scanner minigame. Match 5 frequencies 1-5 and gain a reward multiplier based on it.
+ */
 public class FreqScanner {
     private int[] targetFrequency;
     private int[] playerFrequency;
     private int[] revealedPositions;
     private int matches;
 
+    /**
+     * Creates a new frequency scanner.
+     */
     public FreqScanner() {
         this.targetFrequency = new int[5];
         this.playerFrequency = new int[5];
@@ -14,23 +20,42 @@ public class FreqScanner {
         this.matches = 0;
     }
 
+    /**
+     * Gets the target frequency of the minigame.
+     * @return The target frequency.
+     */
     public int[] getTargetFreq() {
         return targetFrequency;
     }
 
+    /**
+     * Gets the frequency guessed by the player.
+     * @return The frequency guessed.
+     */
     public int[] getPlayerFreq() {
         return playerFrequency;
     }
 
+    /**
+     * Gets the revealed positions of the frequency given to the player.
+     * @return The revealed positions.
+     */
     public int[] getRevealedPositions() {
         return revealedPositions;
     }
 
+    /**
+     * Gets how many matches the player made.
+     * @return The amount of matches.
+     */
     public int getMatches() {
         return matches;
     }
 
-
+    /**
+     * Sets the target frequency to a new one.
+     * @param freqs The new target frequency.
+     */
     public void setTargetFreq(int[] freqs) {
         if (freqs.length != 5) {
             System.out.println("Target frequency must be of 5 integers.");
@@ -39,6 +64,10 @@ public class FreqScanner {
         }
     }
 
+    /**
+     * Sets the player frequency to a new one.
+     * @param freqs The new player frequency.
+     */
     public void setPlayerFreq(int[] freqs) {
         if (freqs.length != 5) {
             System.out.println("Player frequency must be of 5 integers.");
@@ -47,6 +76,10 @@ public class FreqScanner {
         }
     }
 
+    /**
+     * Sets the revealed positions of the frequency.
+     * @param positions The new positions.
+     */
     public void setRevealedPositions(int[] positions) {
         if (positions.length != 5) {
             System.out.println("Revealed positions must be of 5 integers. Example: 0, 0, 1, 0, 0. Meaning the 3rd position is only revealed.");
@@ -55,6 +88,10 @@ public class FreqScanner {
         }
     }
 
+    /**
+     * Sets the matches the player made.
+     * @param matches The amount of matches.
+     */
     public void setMatches(int matches) {
         if (matches > 5 || matches < 0) {
             System.out.println("Invalid match count. Must be from 0 to 5.");
@@ -63,6 +100,12 @@ public class FreqScanner {
         }
     }
 
+    /**
+     * The actual minigame. Generates a random target frequency, gives the player random positions revealed based on upgrades and allows them to guess.
+     * @param ship The player's ship.
+     * @param scanner The player's input.
+     * @return How many matches the player made.
+     */
     public int generateSignal(Ship ship, Scanner scanner) {
         this.matches = 0;
         for (int i = 0; i < this.targetFrequency.length; i++) {
@@ -112,6 +155,13 @@ public class FreqScanner {
         return matches;
     }
 
+    /**
+     * Reveals frequencies to the player based on upgrades.
+     * @param ship The player's ship.
+     * @param revealedFrequencies The revealed frequencies
+     * @param frequencies The target frequency
+     * @return The revealed frequency values of the target frequency.
+     */
     public static String revealFrequencies(Ship ship, int[] revealedFrequencies, int[] frequencies) {
         Arrays.fill(revealedFrequencies, 0);
         int revealed = 1;
